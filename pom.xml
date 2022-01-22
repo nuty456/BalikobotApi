@@ -247,11 +247,4 @@
 		<finalName>${project.name}-${project.version}</finalName>
 	</build>
 
-	<distributionManagement>
-		<repository>
-			<id>AirtoyRepository</id>
-			<url>http://maven.airtoy.cz/maven2</url>
-		</repository>
-	</distributionManagement>
-
 </project>
