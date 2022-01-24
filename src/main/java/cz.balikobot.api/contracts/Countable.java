@@ -8,7 +8,6 @@ public interface Countable {
    *     </p>
    *     <p>
    *     The return value is cast to an integer.
-   * @link https://php.net/manual/en/countable.count.php
    */
   int count();
 

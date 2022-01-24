@@ -4,7 +4,6 @@ public interface ArrayAccess<T, K> {
 
   /**
    * Whether a offset exists
-   * @link https://php.net/manual/en/arrayaccess.offsetexists.php
    * @param offset <p>
    * An offset to check for.
    * </p>
@@ -17,7 +16,6 @@ public interface ArrayAccess<T, K> {
 
   /**
    * Offset to retrieve
-   * @link https://php.net/manual/en/arrayaccess.offsetget.php
    * @param offset <p>
    * The offset to retrieve.
    * </p>
@@ -27,7 +25,6 @@ public interface ArrayAccess<T, K> {
 
   /**
    * Offset to set
-   * @link https://php.net/manual/en/arrayaccess.offsetset.php
    * @param offset <p>
    * The offset to assign the value to.
    * </p>
@@ -40,7 +37,6 @@ public interface ArrayAccess<T, K> {
 
   /**
    * Offset to unset
-   * @link https://php.net/manual/en/arrayaccess.offsetunset.php
    * @param offset <p>
    * The offset to unset.
    * </p>
