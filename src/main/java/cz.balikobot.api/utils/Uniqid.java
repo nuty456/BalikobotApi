@@ -3,29 +3,31 @@ package cz.balikobot.api.utils;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 
+/**
+ * Unique identifier.
+ */
 public class Uniqid {
-  /***
-   *  Copy of uniqid in php http://php.net/manual/fr/function.uniqid.php
-   * @param prefix
-   * @param more_entropy
-   * @return
+  /**
+   * Generate a unique identifier.
+   *
+   * @param prefix       The prefix to prepend to the generated identifier. Can be empty.
+   * @param more_entropy Whether to generate a more entropy-based identifier. If set to false, a shorter identifier will be generated.
+   * @return The generated unique identifier.
    */
   public static String uniqid(String prefix, boolean more_entropy) {
     long time = System.currentTimeMillis();
-    //String uniqid = String.format("%fd%05f", Math.floor(time),(time-Math.floor(time))*1000000);
-    //uniqid = uniqid.substring(0, 13);
     String uniqid = "";
+    String format = String.format("%s%08x%05x", prefix, time / 1000, time);
     if (!more_entropy) {
-      uniqid = String.format("%s%08x%05x", prefix, time / 1000, time);
+      uniqid = format;
     } else {
       SecureRandom sec = new SecureRandom();
       byte[] sbuf = sec.generateSeed(8);
       ByteBuffer bb = ByteBuffer.wrap(sbuf);
 
-      uniqid = String.format("%s%08x%05x", prefix, time / 1000, time);
+      uniqid = format;
       uniqid += "." + String.format("%.8s", "" + bb.getLong() * -1);
     }
-
 
     return uniqid;
   }

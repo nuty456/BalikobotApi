@@ -5,6 +5,9 @@ import java.util.List;
 
 import cz.balikobot.api.exceptions.InvalidArgumentException;
 
+/**
+ * Countries.
+ */
 public enum CountryEnum {
   /**
    * Afghanistan
@@ -1521,11 +1524,10 @@ public enum CountryEnum {
   }
 
   /**
-   * Validate country code
+   * Validates the given country code.
    *
-   * @param code
-   * @return void
-   * @throws \InvalidArgumentException
+   * @param code the country code to validate
+   * @throws InvalidArgumentException if the country code is invalid or unknown
    */
   public static void validateCode(String code) throws InvalidArgumentException {
     final CountryEnum countryEnum = CountryEnum.valueOf(code);

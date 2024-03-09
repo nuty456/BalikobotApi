@@ -1,5 +1,8 @@
 package cz.balikobot.api.definitions;
 
+/**
+ * Balikobot API requests.
+ */
 public enum Request {
   /**
    * Add a package

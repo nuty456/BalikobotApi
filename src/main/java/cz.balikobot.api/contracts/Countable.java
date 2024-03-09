@@ -1,5 +1,8 @@
 package cz.balikobot.api.contracts;
 
+/**
+ *
+ */
 public interface Countable {
   /**
    * Count elements of an object

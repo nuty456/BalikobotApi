@@ -15,26 +15,36 @@ import cz.balikobot.api.model.values.pkg.NotificationData;
 import cz.balikobot.api.model.values.pkg.PackageData;
 import cz.balikobot.api.model.values.pkg.ParcelPackageData;
 
+/**
+ * Represents a package in the Balikobot system.
+ * Extends the AbstractPackage class and implements various interfaces to provide additional functionality.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder(toBuilder = true)
 public class BalikobotPackage extends AbstractPackage implements CashOnDeliveryData, CommonData, CustomerData, DeliveryData, ForeignCountryDeliveryData, NotificationData, PackageData, ParcelPackageData, Cloneable {
-  // CashOnDeliveryData cashOnDeliveryData;
-  // CustomerData customerData;
-  // DeliveryData deliveryData;
-  // ForeignCountryDeliveryData foreignCountryDeliveryData;
-  // NotificationData notificationData;
-  // PackageData packageData;
-  // ParcelPackageData parcelPackageData;
 
+  /**
+   * Represents a package in the Balikobot system.
+   * Extends the AbstractPackage class and implements various interfaces to provide additional functionality.
+   */
   public BalikobotPackage() {
     super();
   }
 
+  /**
+   * Represents a package in the Balikobot system. Extends the AbstractPackage class and implements various interfaces to provide additional functionality.
+   */
   public BalikobotPackage(HashMap<Object, Object> data) {
     super(data);
   }
 
+  /**
+   * Creates a shallow copy of the BalikobotPackage object.
+   *
+   * @return a new BalikobotPackage object with the same field values as the original object.
+   * If cloning is not supported, returns a new BalikobotPackage object with the same field values as the original object.
+   */
   @Override
   public BalikobotPackage clone() {
     try {

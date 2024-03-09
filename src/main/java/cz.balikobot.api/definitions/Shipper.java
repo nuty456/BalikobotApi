@@ -3,6 +3,9 @@ package cz.balikobot.api.definitions;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Balikobot shippers.
+ */
 public enum Shipper {
   /**
    * Česká pošta
@@ -210,11 +213,10 @@ public enum Shipper {
   }
 
   /**
-   * Validate shipper code.
+   * Validates the given shipper code. Throws an exception if the shipper code is invalid.
    *
-   * @param code
-   * @return void
-   * @throws Exception
+   * @param code the shipper code to validate
+   * @throws Exception if the shipper code is invalid
    */
   public static void validateCode(String code) throws Exception {
     final Shipper shipperCodeEnum = Shipper.valueOfLabel(code);
@@ -224,35 +226,35 @@ public enum Shipper {
   }
 
   /**
-   * Determine if shipper service support full branch API
+   * Checks if the given shipper and service codes have full branches support.
    *
-   * @param shipperCode
-   * @param serviceCode
-   * @return Boolean
+   * @param shipperCode The shipper code.
+   * @param serviceCode The service code.
+   * @return true if the shipper and service codes have full branches support, false otherwise.
    */
   public static Boolean hasFullBranchesSupport(String shipperCode, String serviceCode) {
     final ServiceType serviceCodeEnum = ServiceType.valueOfLabel(serviceCode);
     final Shipper shipperCodeEnum = Shipper.valueOfLabel(shipperCode);
 
-    if (shipperCodeEnum.equals(ZASILKOVNA)) {
+    if (shipperCodeEnum != null && shipperCodeEnum.equals(ZASILKOVNA)) {
       return true;
     }
 
-    if (shipperCodeEnum.equals(CP) && serviceCodeEnum.equals(ServiceType.CP_NP)) {
+    if (shipperCodeEnum != null && serviceCodeEnum != null && shipperCodeEnum.equals(CP) && serviceCodeEnum.equals(ServiceType.CP_NP)) {
       return true;
     }
 
     List<ServiceType> services = Arrays.asList(ServiceType.PBH_MP, ServiceType.PBH_FAN_KURIER);
 
-    return shipperCodeEnum.equals(PBH) && services.contains(serviceCodeEnum);
+    return shipperCodeEnum != null && shipperCodeEnum.equals(PBH) && services.contains(serviceCodeEnum);
   }
 
   /**
-   * Determine if shipper has support to filter branches by country code.
+   * Checks if the given shipper and service codes support branch filtering by country.
    *
-   * @param shipperCode
-   * @param serviceCode
-   * @return Boolean
+   * @param shipperCode The code of the shipper.
+   * @param serviceCode The code of the service.
+   * @return {@code true} if the shipper and service support branch filtering by country, {@code false} otherwise.
    */
   public static Boolean hasBranchCountryFilterSupport(String shipperCode, String serviceCode) {
     if (serviceCode == null) {

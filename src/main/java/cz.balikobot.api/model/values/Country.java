@@ -5,76 +5,71 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * A class representing a country.
+ */
 @Data
+@AllArgsConstructor
 public class Country {
   /**
-   * Names
+   * Names.
    */
-  private HashMap<String, String> names = new HashMap<String, String>();
+  private HashMap<String, String> names = new HashMap<>();
 
   /**
-   * Alpha-2 country code
+   * Alpha-2 country code.
    */
   private String code;
 
   /**
-   * Continent name
+   * Continent name.
    */
   private String continent;
 
   /**
-   * Phone prefixes
+   * Phone prefixes.
    */
   private List<String> phonePrefixes;
 
   /**
-   * Currency code
+   * Currency code.
    */
   private String currencyCode;
 
-  /**
-   * Country constructor
-   *
-   * @param names
-   * @param code
-   * @param currencyCode
-   * @param phonePrefixes
-   * @param continent
-   */
-  public Country(
-      HashMap<String, String> names,
-      String code,
-      String currencyCode,
-      List<String> phonePrefixes,
-      String continent
-  ) {
-    this.names = names;
-    this.code = code;
-    this.currencyCode = currencyCode;
-    this.phonePrefixes = phonePrefixes;
-    this.continent = continent;
-  }
 
   /**
-   * @param locale
-   * @return String|null
+   * Retrieves the name of the country in the specified locale.
+   *
+   * @param locale The locale used to retrieve the country name
+   * @return The name of the country in the specified locale
    */
   public String getName(String locale) {
     return this.names.get(locale);
   }
 
   /**
-   * @return String
+   * Retrieves the phone prefix of the country.
+   *
+   * @return The phone prefix of the country.
    */
   public String getPhonePrefix() {
     return this.phonePrefixes.get(0);
   }
 
   /**
-   * @param data
-   * @return \Inspirum\Balikobot\Model\Values\Country
+   * Creates a new instance of the Country class using the provided data.
+   *
+   * @param data The data used to create the country instance. The data should be a HashMap with the following keys:
+   *             - "name_cz": The name of the country in Czech language (String)
+   *             - "name_en": The name of the country in English language (String)
+   *             - "iso_code": The ISO code of the country (String)
+   *             - "currency": The currency code of the country (String)
+   *             - "phone_prefix": The phone prefix(es) of the country. This can be a single String or a List of Strings. (Object)
+   *             - "continent": The name of the continent the country belongs to (String)
+   * @return A new instance of the Country class initialized with the provided data.
    */
   public static Country newInstanceFromData(HashMap<Object, Object> data) {
     return new Country(

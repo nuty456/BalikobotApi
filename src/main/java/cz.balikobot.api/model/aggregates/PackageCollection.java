@@ -14,8 +14,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Represents a collection of packages.
+ */
 @Data
+@Slf4j
 public class PackageCollection implements ArrayAccess<Integer, BalikobotPackage>, Countable, IteratorAggregate<BalikobotPackage> {
   /**
    * Packages
@@ -28,24 +33,20 @@ public class PackageCollection implements ArrayAccess<Integer, BalikobotPackage>
   private Shipper shipper;
 
   /**
-   * PackageCollection constructor
-   *
-   * @param shipper
+   * Represents a collection of packages.
    */
   public PackageCollection(Shipper shipper) {
     this.shipper = shipper;
   }
 
   /**
-   * Add package to collection
+   * Adds a BalikobotPackage to the PackageCollection.
+   * If the BalikobotPackage does not have an EID (Electronic Identification),
+   * a new EID is generated and set on the BalikobotPackage before adding it to the collection.
    *
-   * @param \Inspirum\Balikobot\Model\Values\Package package
-   * @return void
+   * @param balikobotPackage The BalikobotPackage to be added.
    */
   public void add(BalikobotPackage balikobotPackage) {
-    // clone balikobotPackage
-    // todo balikobotPackage = balikobotPackage.clone();
-
     // set collection EID
     if (!balikobotPackage.hasEID()) {
       balikobotPackage.setEID(this.newEID());
@@ -55,38 +56,35 @@ public class PackageCollection implements ArrayAccess<Integer, BalikobotPackage>
     this.packages.add(balikobotPackage);
   }
 
-
   /**
-   * Get the collection of packages as a plain ArrayList<>
+   * Converts the packages stored in the PackageCollection to an ArrayList of HashMaps.
    *
-   * @return ArrayList<ArrayList < String, mixed>>
+   * @return An ArrayList of HashMaps, where each HashMap represents the data of a package.
    */
   public List<HashMap<Object, Object>> toArray() {
     List<HashMap<Object, Object>> result = new ArrayList<>();
-    // ObjectMapper oMapper = new ObjectMapper();
-
     // object -> Map
     for (BalikobotPackage aPackage : packages) {
-      // HashMap<Object, Object> map = oMapper.convertValue(aPackage.getData(), HashMap.class);
       result.add(aPackage.getData());
     }
     return result;
   }
 
   /**
-   * Get new EID for package batch
+   * Generates a new Electronic Identification (EID) for a BalikobotPackage.
+   * The EID is a unique identifier used to identify packages in the Balikobot system.
    *
-   * @return String
+   * @return The generated EID as a String.
    */
-  private String newEID() { // todo predelat.. maji limit na 23 znaku
+  private String newEID() {
     final String s = Uniqid.uniqid("", false) + Calendar.getInstance().getTime().getTime();
-    return s.substring(0, 20); // todo return substr(time() . uniqid(), -20, 20);
+    return s.substring(0, 20);
   }
 
   /**
-   * Count elements of an object
+   * Returns the count of packages in the PackageCollection.
    *
-   * @return int
+   * @return The number of packages in the PackageCollection.
    */
   @Override
   public int count() {
@@ -94,9 +92,9 @@ public class PackageCollection implements ArrayAccess<Integer, BalikobotPackage>
   }
 
   /**
-   * Get an iterator for the items
+   * Returns an Iterator for the elements of the PackageCollection class.
    *
-   * @return \ArrayIterator<int,\Inspirum\Balikobot\Model\Values\Package>
+   * @return Iterator of BalikobotPackage objects
    */
   @Override
   public Iterator<BalikobotPackage> getIterator() {
@@ -104,26 +102,27 @@ public class PackageCollection implements ArrayAccess<Integer, BalikobotPackage>
   }
 
   /**
-   * Determine if an item exists at an offset
+   * Checks if an offset exists in the PackageCollection.
    *
-   * @param key
-   * @return Boolean
+   * @param key The offset to check for.
+   * @return True if the offset exists, false otherwise.
    */
   @Override
   public Boolean offsetExists(Integer key) {
     try {
-      this.packages.get(key);
+      // todo this.packages.get(key);
       return true;
     } catch (Exception e) {
+      log.error(String.format("Exception: %s", e.getMessage()), e);
     }
     return false;
   }
 
   /**
-   * Get an item at a given offset
+   * Retrieves the BalikobotPackage object at the given offset from the packages collection.
    *
-   * @param key
-   * @return mixed
+   * @param key The offset representing the element to be retrieved.
+   * @return The BalikobotPackage object at the specified offset, or null if the offset does not exist.
    */
   @Override
   public BalikobotPackage offsetGet(Integer key) {
@@ -131,11 +130,10 @@ public class PackageCollection implements ArrayAccess<Integer, BalikobotPackage>
   }
 
   /**
-   * Set the item at a given offset
+   * Sets the value at the given offset in the packages collection.
    *
-   * @param key
-   * @param value
-   * @return void
+   * @param key   The offset representing the element to be set.
+   * @param value The value to be set at the given offset.
    */
   @Override
   public void offsetSet(Integer key, BalikobotPackage value) {
@@ -143,10 +141,9 @@ public class PackageCollection implements ArrayAccess<Integer, BalikobotPackage>
   }
 
   /**
-   * Unset the item at a given offset
+   * Removes the element at the specified offset in the packages collection.
    *
-   * @param key
-   * @return void
+   * @param key The offset representing the element to be removed.
    */
   @Override
   public void offsetUnset(Integer key) {

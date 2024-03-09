@@ -5,196 +5,207 @@ import cz.balikobot.api.definitions.Shipper;
 
 import java.util.HashMap;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The Branch class represents a branch entity.
+ * A branch is associated with a shipper and a service type.
+ * It contains various properties such as its identifier, name, address, and opening hours.
+ */
 @Data
 @Slf4j
+@AllArgsConstructor
 public class Branch {
   /**
-   *
+   * The Shipper class represents a shipper entity.
    */
   private Shipper shipper;
 
   /**
-   * @var String|null
+   * Type of service.
    */
   private ServiceType service;
 
   /**
-   *
+   * Represents the unique identifier of a branch.
    */
   private String branchId;
 
   /**
-   * @var String|null
+   * ID.
    */
   private String id;
 
   /**
-   * @var String|null
+   * UID.
    */
   private String uid;
 
   /**
-   *
+   * Type.
    */
   private String type;
 
   /**
-   *
+   * Name.
    */
   private String name;
 
   /**
-   *
+   * City.
    */
   private String city;
 
   /**
-   *
+   * Street.
    */
   private String street;
 
   /**
-   *
+   * ZIP.
    */
   private String zip;
 
   /**
-   * @var String|null
+   * Represents a part of a city.
    */
   private String cityPart;
 
   /**
-   * @var String|null
+   * The district where an entity is located.
    */
   private String district;
 
   /**
-   * @var String|null
+   * This private variable represents a region.
    */
   private String region;
 
   /**
-   * ISO 3166-1 alpha-2 http://cs.wikipedia.org/wiki/ISO_3166-1
+   * Represents the name of a country.
+   * <p>
+   * ISO 3166-1 alpha-2
    *
-   * @var String|null
+   * @see <a href="https://cs.wikipedia.org/wiki/ISO_3166-1">ISO_3166-1</a>
    */
   private String country;
 
   /**
-   * @var String|null
+   * Represents a currency.
    */
   private String currency;
 
   /**
-   * @var String|null
+   * The small photo of an object.
+   * This variable stores the file path or URL of the small photo associated with the object.
    */
   private String photoSmall;
 
   /**
-   * @var String|null
+   * The variable to store the path of a large photo image.
    */
   private String photoBig;
 
   /**
-   * @var String|null
+   * The URL variable represents a private string that stores a URL.
+   * It is used to reference and manipulate URLs in the software application.
    */
   private String url;
 
   /**
-   * @var Double|null
+   * The latitude variable represents the latitude coordinate of a location.
    */
   private Double latitude;
 
   /**
-   * @var Double|null
+   * Represents the longitude of a location.
    */
   private Double longitude;
 
   /**
-   * @var String|null
+   * The directionsGlobal variable represents the global directions. It is a private instance variable of type String.
    */
   private String directionsGlobal;
 
   /**
-   * @var String|null
+   * Represents the directions for a car.
    */
   private String directionsCar;
 
   /**
-   * @var String|null
+   * The directionsPublic variable stores the public directions.
    */
   private String directionsPublic;
 
   /**
-   * @var Boolean|null
+   * Indicates whether a place is wheelchair accessible.
    */
   private Boolean wheelchairAccessible;
 
   /**
-   * @var Boolean|null
+   * Represents the status of the claim assistant. It is a boolean value that indicates whether the claim assistant is available or not.
    */
   private Boolean claimAssistant;
 
   /**
-   * @var Boolean|null
+   * The dressingRoom is a private variable indicating the availability of a dressing room.
    */
   private Boolean dressingRoom;
 
   /**
-   * @var String|null
+   * The openingMonday variable represents the opening hours on Monday in a string format.
    */
   private String openingMonday;
 
   /**
-   * @var String|null
+   * This private variable represents the opening hours on Tuesday.
    */
   private String openingTuesday;
 
   /**
-   * @var String|null
+   * The openingWednesday variable stores the opening hours for Wednesday as a String.
    */
   private String openingWednesday;
 
   /**
-   * @var String|null
+   * The openingThursday variable represents the opening hours on Thursday.
    */
   private String openingThursday;
 
   /**
-   * @var String|null
+   * The openingFriday variable represents the opening time on Fridays.
    */
   private String openingFriday;
 
   /**
-   * @var String|null
+   * The openingSaturday variable stores the opening hours for Saturdays.
    */
   private String openingSaturday;
 
   /**
-   * @var String|null
+   * The opening hours on Sunday.
    */
   private String openingSunday;
 
   /**
-   * @var Double|null
+   * The maximum weight.
    */
   private Double maxWeight;
 
   /**
-   * Branch constructor
+   * Constructs a new instance of the Branch class.
    *
-   * @param shipper
-   * @param service
-   * @param id
-   * @param uid
-   * @param type
-   * @param name
-   * @param city
-   * @param street
-   * @param zip
+   * @param shipper The shipper associated with the branch.
+   * @param service The service type associated with the branch.
+   * @param id      The identifier of the branch.
+   * @param uid     The unique identifier of the branch.
+   * @param type    The type of the branch.
+   * @param name    The name of the branch.
+   * @param city    The city where the branch is located.
+   * @param street  The street address of the branch.
+   * @param zip     The ZIP code of the branch.
    */
   public Branch(
       Shipper shipper,
@@ -220,41 +231,41 @@ public class Branch {
   }
 
   /**
-   * Branch constructor
+   * Creates a new Branch object with the specified parameters.
    *
-   * @param shipper
-   * @param service
-   * @param id
-   * @param uid
-   * @param type
-   * @param name
-   * @param city
-   * @param street
-   * @param zip
-   * @param country
-   * @param cityPart
-   * @param district
-   * @param region
-   * @param currency
-   * @param photoSmall
-   * @param photoBig
-   * @param url
-   * @param latitude
-   * @param longitude
-   * @param directionsGlobal
-   * @param directionsCar
-   * @param directionsPublic
-   * @param wheelchairAccessible
-   * @param claimAssistant
-   * @param dressingRoom
-   * @param openingMonday
-   * @param openingTuesday
-   * @param openingWednesday
-   * @param openingThursday
-   * @param openingFriday
-   * @param openingSaturday
-   * @param openingSunday
-   * @param maxWeight
+   * @param shipper              the shipper for the branch
+   * @param service              the service type for the branch
+   * @param id                   the ID of the branch
+   * @param uid                  the UID of the branch
+   * @param type                 the type of the branch
+   * @param name                 the name of the branch
+   * @param city                 the city where the branch is located
+   * @param street               the street of the branch's address
+   * @param zip                  the ZIP code of the branch's address
+   * @param country              the country where the branch is located
+   * @param cityPart             the city part where the branch is located
+   * @param district             the district where the branch is located
+   * @param region               the region where the branch is located
+   * @param currency             the currency used at the branch
+   * @param photoSmall           the URL of the small photo of the branch
+   * @param photoBig             the URL of the big photo of the branch
+   * @param url                  the URL of the branch's website
+   * @param latitude             the latitude coordinate of the branch's location
+   * @param longitude            the longitude coordinate of the branch's location
+   * @param directionsGlobal     the global directions to the branch
+   * @param directionsCar        the car directions to the branch
+   * @param directionsPublic     the public transportation directions to the branch
+   * @param wheelchairAccessible indicates if the branch is wheelchair accessible
+   * @param claimAssistant       indicates if the branch has a claim assistant
+   * @param dressingRoom         indicates if the branch has a dressing room
+   * @param openingMonday        the opening hours on Mondays
+   * @param openingTuesday       the opening hours on Tuesdays
+   * @param openingWednesday     the opening hours on Wednesdays
+   * @param openingThursday      the opening hours on Thursdays
+   * @param openingFriday        the opening hours on Fridays
+   * @param openingSaturday      the opening hours on Saturdays
+   * @param openingSunday        the opening hours on Sundays
+   * @param maxWeight            the maximum weight allowed at the branch
    */
   public Branch(
       Shipper shipper,
@@ -328,9 +339,9 @@ public class Branch {
   }
 
   /**
-   * Resolve branch ID
+   * Resolves the branch ID based on the shipper and service type.
    *
-   * @return String
+   * @return The resolved branch ID.
    */
   private String resolveBranchId() {
     // get key used in branch_id when calling add request
@@ -343,23 +354,23 @@ public class Branch {
     }
 
     if (this.shipper == Shipper.PPL) {
-      return ((String) this.id).replace("KM", "");
+      return this.id.replace("KM", "");
     }
 
     if (this.shipper == Shipper.INTIME) {
       return this.name;
     }
 
-    return (String) this.id;
+    return this.id;
   }
 
   /**
-   * New instance from data
+   * Creates a new instance of the Branch class from the given data.
    *
-   * @param shipper
-   * @param service
-   * @param data
-   * @return \Inspirum\Balikobot\Model\Values\Branch
+   * @param shipper the shipper of the branch
+   * @param service the service type of the branch
+   * @param data    the data used to construct the branch
+   * @return a new instance of the Branch class
    */
   public static Branch newInstanceFromData(Shipper shipper, ServiceType service, HashMap<Object, Object> data) {
     if (shipper == Shipper.CP && service == ServiceType.CP_NP) {
@@ -368,7 +379,7 @@ public class Branch {
 
     if (data.get("street") != null && (data.get("house_number") != null || data.get("orientation_number") != null)) {
       final Object houseNumberSource = data.get("house_number");
-      Integer houseNumber = 0;
+      int houseNumber = 0;
       try {
         if (houseNumberSource != null) {
           if (houseNumberSource instanceof Integer) {
@@ -380,7 +391,7 @@ public class Branch {
       } catch (NumberFormatException e) {
         log.error(String.format("Exception: %s", e.getMessage()), e);
       }
-      Integer orientationNumber = 0;
+      int orientationNumber = 0;
       try {
         final Object orientationNumberSource = data.get("orientation_number");
         if (orientationNumberSource != null) {
@@ -397,7 +408,7 @@ public class Branch {
       data.put("street", String.format("%s %s", (data.get("street") != null ? data.get("street") : (data.get("city") != null ? data.get("city") : "")), streetNumber));
     }
     final Object latitudeSource = data.get("latitude");
-    Double latitude = 0.0;
+    double latitude = 0.0;
     try {
       if (latitudeSource != null) {
         if (latitudeSource instanceof Double) {
@@ -412,7 +423,7 @@ public class Branch {
       log.error(String.format("Exception: %s", e.getMessage()), e);
     }
     final Object longitudeSource = data.get("longitude");
-    Double longitude = 0.0;
+    double longitude = 0.0;
     try {
       if (longitudeSource != null) {
         if (longitudeSource instanceof Double) {

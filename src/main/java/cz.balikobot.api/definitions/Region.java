@@ -1,5 +1,8 @@
 package cz.balikobot.api.definitions;
 
+/**
+ * Balikobot regions.
+ */
 public enum Region {
   /**
    * Alabama

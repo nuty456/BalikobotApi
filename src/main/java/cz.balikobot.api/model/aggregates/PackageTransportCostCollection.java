@@ -13,38 +13,39 @@ import cz.balikobot.api.definitions.Shipper;
 import cz.balikobot.api.exceptions.InvalidArgumentException;
 import cz.balikobot.api.model.values.ArrayAccess;
 import cz.balikobot.api.model.values.PackageTransportCost;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Package Transport Cost Collection.
+ */
 @Data
-public class PackageTransportCostCollection implements ArrayAccess<Integer ,PackageTransportCost>, Countable, IteratorAggregate<PackageTransportCost> {
+@Slf4j
+public class PackageTransportCostCollection implements ArrayAccess<Integer, PackageTransportCost>, Countable, IteratorAggregate<PackageTransportCost> {
   /**
-   * Package costs
-   *
-   * @var ArrayList<int,\Inspirum\Balikobot\Model\Values\PackageTransportCost>|\Inspirum\Balikobot\Model\Values\PackageTransportCost[]
+   * Variable that stores a list of PackageTransportCost objects representing different costs.
+   * The list is initially empty.
    */
   private ArrayList<PackageTransportCost> costs = new ArrayList();
 
   /**
-   * Shipper code
-   *
-   * @var String|null
+   * The shipper variable represents a shipper object.
    */
   private Shipper shipper;
 
   /**
-   * OrderedPackageCollection constructor
+   * Constructs a new PackageTransportCostCollection object.
    *
-   * @param shipper
+   * @param shipper the shipper used for calculating transport costs
    */
   public PackageTransportCostCollection(Shipper shipper) {
     this.shipper = shipper;
   }
 
   /**
-   * Add package cost
+   * Adds a PackageTransportCost to the collection of costs.
    *
-   * @param \Inspirum\Balikobot\Model\Values\PackageTransportCost package
-   * @return void
-   * @throws \InvalidArgumentException
+   * @param packageTransportCost the PackageTransportCost to be added
+   * @throws InvalidArgumentException if the package transport cost is invalid
    */
   public void add(PackageTransportCost packageTransportCost) throws InvalidArgumentException {
     // validate package cost shipper
@@ -55,9 +56,10 @@ public class PackageTransportCostCollection implements ArrayAccess<Integer ,Pack
   }
 
   /**
-   * Get shipper
+   * Retrieves the shipper associated with this object.
    *
-   * @return String
+   * @return The shipper object.
+   * @throws RuntimeException if the shipper is null.
    */
   public Shipper getShipper() {
     if (this.shipper == null) {
@@ -68,24 +70,25 @@ public class PackageTransportCostCollection implements ArrayAccess<Integer ,Pack
   }
 
   /**
-   * Get EIDs
+   * Retrieves a list of batch IDs from the PackageTransportCost objects contained in this instance.
    *
-   * @return ArrayList<String>
+   * @return A list of batch IDs.
    */
   public List<String> getBatchIds() {
     return this.costs.stream().map(PackageTransportCost::getBatchId).collect(Collectors.toList());
   }
 
   /**
-   * Get total cost for all packages
+   * Calculates the total cost of all package transport costs in the specified currency.
    *
-   * @return Double
+   * @return the total cost as a Double value
+   * @throws RuntimeException if the currency codes of the package costs are not the same
    */
   public Double getTotalCost() {
     Double totalCost = 0.0;
     String currencyCode = this.getCurrencyCode();
 
-    for(PackageTransportCost cost: this.costs) {
+    for (PackageTransportCost cost : this.costs) {
       if (!cost.getCurrencyCode().equals(currencyCode)) {
         throw new RuntimeException("Package cost currency codes are not the same");
       }
@@ -97,12 +100,13 @@ public class PackageTransportCostCollection implements ArrayAccess<Integer ,Pack
   }
 
   /**
-   * Get currency code
+   * Retrieves the currency code of the first element in the costs collection.
    *
-   * @return String
+   * @return The currency code.
+   * @throws RuntimeException if the collection is empty.
    */
   public String getCurrencyCode() {
-    if (this.costs==null ||this.costs.isEmpty()) {
+    if (this.costs == null || this.costs.isEmpty()) {
       throw new RuntimeException("Collection is empty");
     }
 
@@ -110,60 +114,50 @@ public class PackageTransportCostCollection implements ArrayAccess<Integer ,Pack
   }
 
   /**
-   * Validate shipper
+   * Validates the shipper of a PackageTransportCost object.
    *
-   * @param \Inspirum\Balikobot\Model\Values\PackageTransportCost package
-   * @return void
-   * @throws \InvalidArgumentException
+   * @param pPackage the PackageTransportCost object to be validated
+   * @return true if the shipper of the PackageTransportCost object matches the shipper of this object, false otherwise
    */
-  private boolean validateShipper(PackageTransportCost pPackage) { //throws InvalidArgumentException {
+  private boolean validateShipper(PackageTransportCost pPackage) {
     // set shipper if first pPackage in collection
     if (this.shipper == null) {
       this.shipper = pPackage.getShipper();
     }
-
-    // validate shipper
-    // throw new InvalidArgumentException(
-    //     String.format(
-    //         "Package is from different shipper (\"%s\" instead of \"%s\")",
-    //         pPackage.getShipper(),
-    //         this.shipper
-    //     )
-    // );
     return this.shipper == pPackage.getShipper();
   }
 
   /**
-   * Determine if an item exists at an offset
+   * Checks whether the specified key exists in the map of costs.
    *
-   * @param key
-   * @return Boolean
+   * @param key the key to check for existence
+   * @return true if the key exists in the map of costs, false otherwise
    */
   public Boolean offsetExists(Integer key) {
     try {
-      this.costs.get(key);
+      // todo this.costs.get(key);
       return true;
     } catch (Exception e) {
+      log.error(String.format("Exception: %s", e.getMessage()),e);
     }
     return false;
   }
 
   /**
-   * Get an item at a given offset
+   * Retrieves the PackageTransportCost object associated with the specified key from the costs map.
    *
-   * @param key
-   * @return \Inspirum\Balikobot\Model\Values\PackageTransportCost
+   * @param key The key used to retrieve the PackageTransportCost object.
+   * @return The PackageTransportCost object associated with the specified key, or null if the key is not found.
    */
   public PackageTransportCost offsetGet(Integer key) {
     return this.costs.get(key);
   }
 
   /**
-   * Set the item at a given offset
+   * Sets the value at the specified key in the package costs list, if the given PackageTransportCost object passes the shipper validation.
    *
-   * @param                                                   key
-   * @param \Inspirum\Balikobot\Model\Values\PackageTransportCost value
-   * @return void
+   * @param key The index at which the value should be set.
+   * @param value The PackageTransportCost object to be set.
    */
   public void offsetSet(Integer key, PackageTransportCost value) {
     if (this.validateShipper(value)) {
@@ -173,28 +167,27 @@ public class PackageTransportCostCollection implements ArrayAccess<Integer ,Pack
   }
 
   /**
-   * Unset the item at a given offset
+   * Removes the value associated with the specified key from the costs map.
    *
-   * @param key
-   * @return void
+   * @param key the key whose value is to be removed
    */
   public void offsetUnset(Integer key) {
     this.costs.remove(key);
   }
 
   /**
-   * Count elements of an object
+   * Returns the number of elements in the `costs` list.
    *
-   * @return int
+   * @return The number of elements in the `costs` list.
    */
   public int count() {
     return this.costs.size();
   }
 
   /**
-   * Get an iterator for the items
+   * Returns an iterator over the elements in this collection.
    *
-   * @return \ArrayIterator<int,\Inspirum\Balikobot\Model\Values\PackageTransportCost>
+   * @return an Iterator
    */
   public Iterator<PackageTransportCost> getIterator() {
     return this.costs.iterator();

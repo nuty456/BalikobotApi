@@ -5,79 +5,73 @@ import cz.balikobot.api.definitions.Shipper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * The OrderedPackage class represents an ordered package.
+ */
 @Data
+@AllArgsConstructor
 public class OrderedPackage {
   /**
-   * Package ID
+   * Package ID.
    */
   private String packageId;
 
   /**
-   * Package batch ID (EID)
+   * Package batch ID (EID).
    */
   private String batchId;
 
   /**
-   * Shipper
+   * Shipper.
    */
   private Shipper shipper;
 
   /**
-   * Carrier ID (for package tracking)
+   * Carrier ID (for package tracking).
    */
   private String carrierId;
 
   /**
-   * Track URL
-   *
-   * @var String|null
+   * Track URL.
    */
   private String trackUrl;
 
   /**
-   * Label URL
-   *
-   * @var String|null
+   * Label URL.
    */
   private String labelUrl;
 
   /**
-   * Carrier ID Swap
-   *
-   * @var String|null
+   * Carrier ID Swap.
    */
   private String carrierIdSwap;
 
   /**
-   * Pieces
-   *
-   * @var ArrayList<String>
+   * Pieces.
    */
   private ArrayList<String> pieces;
 
   /**
-   * Final carrier ID
-   *
-   * @var String|null
+   * Final carrier ID.
    */
   private String finalCarrierId;
 
   /**
-   * Final track URL
-   *
-   * @var String|null
+   * Final track URL.
    */
   private String finalTrackUrl;
 
   /**
-   * OrderedPackage constructor
+   * Represents an ordered package.
    *
-   * @param packageId
-   * @param shipper
-   * @param batchId
-   * @param carrierId
+   * @param packageId The package ID (String).
+   * @param shipper   The shipper associated with the package.
+   * @param batchId   The package batch ID (String).
+   * @param carrierId The carrier ID for package tracking (String, can be null).
+   * @see Shipper
    */
   public OrderedPackage(
       String packageId,
@@ -92,18 +86,18 @@ public class OrderedPackage {
   }
 
   /**
-   * OrderedPackage constructor
+   * Represents an ordered package.
    *
-   * @param packageId
-   * @param shipper
-   * @param batchId
-   * @param carrierId
-   * @param trackUrl
-   * @param labelUrl
-   * @param carrierIdSwap
-   * @param pieces
-   * @param finalCarrierId
-   * @param finalTrackUrl
+   * @param packageId      The package ID (String).
+   * @param shipper        The shipper associated with the package.
+   * @param batchId        The package batch ID (String).
+   * @param carrierId      The carrier ID for package tracking (String, can be null).
+   * @param trackUrl       The track URL for package tracking (String, can be null).
+   * @param labelUrl       The label URL for the package (String, can be null).
+   * @param carrierIdSwap  The carrier ID swap value (String, can be null).
+   * @param pieces         An ArrayList of strings representing the pieces (can be null or empty).
+   * @param finalCarrierId The final carrier ID (String, can be null).
+   * @param finalTrackUrl  The final track URL (String, can be null).
    */
   public OrderedPackage(
       String packageId,
@@ -130,23 +124,34 @@ public class OrderedPackage {
   }
 
   /**
-   * @param shipper
-   * @param data
-   * @return \Inspirum\Balikobot\Model\Values\OrderedPackage
+   * Creates a new instance of the OrderedPackage class from the given data.
+   *
+   * @param shipper The shipper object associated with the package.
+   * @param data    A HashMap containing the data for the package. The keys and their corresponding values in the HashMap are:
+   *                - package_id: The package ID (String).
+   *                - eid: The package batch ID (String).
+   *                - carrier_id: The carrier ID for package tracking (String, can be null).
+   *                - track_url: The track URL for package tracking (String, can be null).
+   *                - label_url: The label URL for the package (String, can be null).
+   *                - carrier_id_swap: The carrier ID swap value (String, can be null).
+   *                - pieces: An ArrayList of strings representing the pieces (can be null or empty).
+   *                - carrier_id_final: The final carrier ID (String, can be null).
+   *                - track_url_final: The final track URL (String, can be null).
+   * @return A new instance of OrderedPackage with the given data.
    */
   public static OrderedPackage newInstanceFromData(Shipper shipper, HashMap<Object, Object> data) {
     return new OrderedPackage(
         (String) data.get("package_id"),
         shipper,
-        (String)data.get("eid"),
-        data.get("carrier_id") != null ? (String)data.get("carrier_id") : "",
-        (String)data.get("track_url"),
-        (String)data.get("label_url"),
-        (String)data.get("carrier_id_swap"),
-        data.get("pieces") != null ? (ArrayList<String>)data.get("pieces") : new ArrayList<>(),
-        (String)data.get("carrier_id_final"),
-        (String)data.get("track_url_final")
-        );
+        (String) data.get("eid"),
+        data.get("carrier_id") != null ? (String) data.get("carrier_id") : "",
+        (String) data.get("track_url"),
+        (String) data.get("label_url"),
+        (String) data.get("carrier_id_swap"),
+        data.get("pieces") != null ? (ArrayList<String>) data.get("pieces") : new ArrayList<>(),
+        (String) data.get("carrier_id_final"),
+        (String) data.get("track_url_final")
+    );
   }
 
 }

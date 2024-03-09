@@ -5,6 +5,9 @@ import java.util.List;
 
 import cz.balikobot.api.exceptions.InvalidArgumentException;
 
+/**
+ * Currencies.
+ */
 public enum Currency {
   /**
    * Dolar
@@ -261,13 +264,10 @@ public enum Currency {
   }
 
   /**
-   * Validate currency code.
+   * Validates the given currency code.
    *
-   * @param code
-   *
-   * @return void
-   *
-   * @throws \InvalidArgumentException
+   * @param code The currency code to validate.
+   * @throws InvalidArgumentException If the code is not a valid currency code.
    */
   public static void validateCode(String code) throws InvalidArgumentException {
     final Currency currencyEnum = Currency.valueOf(code);

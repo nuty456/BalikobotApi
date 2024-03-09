@@ -2,6 +2,7 @@ package cz.balikobot.api.model.values;
 
 import java.util.HashMap;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,51 +10,55 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+/**
+ * A class that represents the status of a package.
+ */
 @Data
 @Slf4j
+@AllArgsConstructor
 public class PackageStatus {
   /**
-   *
+   * ID.
    */
   private Double id;
 
   /**
-   *
+   * The current status.
    */
   private String status;
 
   /**
-   *
+   * Represents the status version 2.
    */
   private String statusV2;
 
   /**
-   *
+   * Name.
    */
   private String name;
 
   /**
-   *
+   * Description.
    */
   private String description;
 
   /**
-   *
+   * Type.
    */
   private String type;
 
   /**
-   * @var \DateTime|null
+   * Date.
    */
   private DateTime date;
 
   /**
-   * PackageStatus constructor
+   * Represents the status of a package.
    *
-   * @param id
-   * @param type
-   * @param name
-   * @param description
+   * @param id          the identifier of the package status
+   * @param type        the type of the package status
+   * @param name        the name of the package status
+   * @param description the description of the package status
    */
   public PackageStatus(Double id, String type, String name, String description) {
     this.id = id;
@@ -64,13 +69,13 @@ public class PackageStatus {
   }
 
   /**
-   * PackageStatus constructor
+   * Initializes a new instance of the PackageStatus class with the specified parameters.
    *
-   * @param id
-   * @param type
-   * @param name
-   * @param description
-   * @param date
+   * @param id          The identifier of the package status.
+   * @param type        The type of the package status.
+   * @param name        The name of the package status.
+   * @param description The description of the package status.
+   * @param date        The date of the package status.
    */
   public PackageStatus(Double id, String type, String name, String description, DateTime date) {
     this.id = id;
@@ -80,41 +85,34 @@ public class PackageStatus {
     this.date = date;
   }
 
-  public PackageStatus(Double id, String status, String statusV2, String type, String description, String name, DateTime date) {
-    this.id = id;
-    this.status = status;
-    this.statusV2 = statusV2;
-    this.name = name;
-    this.description = description;
-    this.type = type;
-    this.date = date;
-  }
-
   /**
-   * @return int
+   * Returns the group ID.
+   *
+   * @return the group ID as an integer
    */
   public int getGroupId() {
     return this.id.intValue();
   }
 
   /**
-   * @param data
-   * @return \Inspirum\Balikobot\Model\Values\PackageStatus
+   * Creates a new PackageStatus instance based on the given data.
+   *
+   * @param data The data used to create the PackageStatus instance. The data is expected to be a HashMap<Object, Object> object.
+   * @return A new PackageStatus instance created from the given data.
    */
   public static PackageStatus newInstanceFromData(HashMap<Object, Object> data) {
     DateTime date = null;
     try {
       if (data.containsKey("date")) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-        DateTime dt = formatter.parseDateTime((String) data.get("date"));
-        date = dt;
+        date = formatter.parseDateTime((String) data.get("date"));
       }
     } catch (Throwable exception) {
       date = null;
     }
 
     final Object statusSource = data.containsKey("status_id_v2") ? data.get("status_id_v2") : data.get("status_id");
-    Double id = 0.0;
+    double id = 0.0;
     try {
       if (statusSource != null) {
         if (statusSource instanceof Double) {

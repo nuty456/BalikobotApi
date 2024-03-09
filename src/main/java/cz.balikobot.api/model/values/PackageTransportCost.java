@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import cz.balikobot.api.definitions.Shipper;
 
+/**
+ * PackageTransportCost represents the transport cost for a package.
+ */
 @Data
+@AllArgsConstructor
 public class PackageTransportCost {
   /**
    * Package batch ID (EID)
@@ -31,19 +36,17 @@ public class PackageTransportCost {
   private String currencyCode;
 
   /**
-   * Cost breakdown
-   *
-   * @var ArrayList<\Inspirum\Balikobot\Model\Values\PackageTransportCostPart>
+   * costsBreakdown represents the breakdown of transport costs for a package.
    */
   private List<PackageTransportCostPart> costsBreakdown;
 
   /**
-   * PackageTransportCost constructor
+   * Initializes a new instance of the PackageTransportCost class.
    *
-   * @param batchId
-   * @param shipper
-   * @param totalCost
-   * @param currencyCode
+   * @param batchId      The package batch ID (EID).
+   * @param shipper      The shipper.
+   * @param totalCost    The total cost of transport.
+   * @param currencyCode The currency code.
    */
   public PackageTransportCost(
       String batchId,
@@ -58,32 +61,11 @@ public class PackageTransportCost {
   }
 
   /**
-   * PackageTransportCost constructor
+   * Creates a new instance of the PackageTransportCost class from the given data.
    *
-   * @param batchId
-   * @param shipper
-   * @param totalCost
-   * @param currencyCode
-   * @param costsBreakdown
-   */
-  public PackageTransportCost(
-      String batchId,
-      Shipper shipper,
-      Double totalCost,
-      String currencyCode,
-      List<PackageTransportCostPart> costsBreakdown
-  ) {
-    this.batchId = batchId;
-    this.shipper = shipper;
-    this.totalCost = totalCost;
-    this.currencyCode = currencyCode;
-    this.costsBreakdown = costsBreakdown;
-  }
-
-  /**
-   * @param shipper
-   * @param data
-   * @return \Inspirum\Balikobot\Model\Values\PackageTransportCost
+   * @param shipper The shipper of the package.
+   * @param data    The data containing the package transport cost information.
+   * @return A new PackageTransportCost object.
    */
   public static PackageTransportCost newInstanceFromData(Shipper shipper, HashMap<String, Object> data) {
     final List<HashMap<String, Object>> costsBreakdownList = (List<HashMap<String, Object>>) data.get("costs_breakdown");
@@ -94,7 +76,7 @@ public class PackageTransportCost {
         (Double) data.get("costs_total"),
         (String) data.get("currency"),
         packageTransportCostPartList
-        );
+    );
   }
 
 }

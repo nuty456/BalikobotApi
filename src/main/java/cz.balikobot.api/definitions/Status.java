@@ -3,6 +3,9 @@ package cz.balikobot.api.definitions;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Package statuses.
+ */
 public enum Status {
   /**
    * Ordered
@@ -100,9 +103,9 @@ public enum Status {
   }
 
   /**
-   * Is package delivered to customer
+   * Package delivered.
    *
-   * @param status
+   * @param status status
    * @return Boolean
    */
   public static Boolean isDelivered(String status) {
@@ -113,9 +116,9 @@ public enum Status {
   }
 
   /**
-   * Package delivery failed
+   * Package delivery failed.
    *
-   * @param status
+   * @param status status
    * @return Boolean
    */
   public static Boolean isError(String status) {
@@ -127,9 +130,9 @@ public enum Status {
   }
 
   /**
-   * Package is being delivered to customer
+   * Package is being delivered to customer.
    *
-   * @param status
+   * @param status status
    * @return Boolean
    */
   public static Boolean isBeingDelivered(String status) {
@@ -143,9 +146,9 @@ public enum Status {
   }
 
   /**
-   * Package delivery processed ended
+   * Package delivery processed ended.
    *
-   * @param status
+   * @param status status
    * @return Boolean
    */
   public static Boolean isClosed(String status) {
@@ -158,10 +161,10 @@ public enum Status {
   }
 
   /**
-   * Check if given ID is in any of given statuses
+   * Check if given ID is in any of given statuses.
    *
-   * @param status
-   * @param statuses
+   * @param status status
+   * @param statuses statuses
    * @return Boolean
    */
   private static Boolean inStatuses(String status, List<Status> statuses) {

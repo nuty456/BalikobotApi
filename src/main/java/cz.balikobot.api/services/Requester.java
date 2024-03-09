@@ -10,7 +10,6 @@ import cz.balikobot.api.definitions.Shipper;
 import cz.balikobot.api.exceptions.BadRequestException;
 import cz.balikobot.api.exceptions.UnauthorizedException;
 import io.vertx.core.Vertx;
-import io.vertx.ext.web.client.HttpResponse;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,6 +42,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Requester class for making API calls.
+ */
 @Data
 @Slf4j
 public class Requester implements RequesterInterface {
@@ -67,28 +69,13 @@ public class Requester implements RequesterInterface {
    */
   private Validator validator;
 
-  // private static final Logger log = LoggerFactory.getLogger(NewVertxClient.class);
-  // private WebClient client = null;
-  // private static final String BASE_URI = "http://localhost:8080";
-  // private String url = null;
-  // private String host = null;
-  // private Integer port = null;
-  // private String path = null;
-  // private String username = null;
-  // private String password = null;
-  // private String encoding = null;
-  // private HttpRequest<Buffer> httpRequest = null;
-  // public String type = null;
-  // public String payload = null;
-  // public Handler<AsyncResult<HttpResponse<Buffer>>> handler = null;
-
   /**
-   * Balikobot API client
+   * Constructs a new instance of Requester.
    *
-   * @param apiUser
-   * @param apiKey
-   * @param sslVerify
-   * @param vertX
+   * @param apiUser   the API user for authentication
+   * @param apiKey    the API key for authentication
+   * @param sslVerify if SSL verification is required
+   * @param vertX     the Vert.x instance
    */
   public Requester(String apiUser, String apiKey, Boolean sslVerify, Vertx vertX) {
     this.vertX = vertX;
@@ -100,13 +87,14 @@ public class Requester implements RequesterInterface {
   }
 
   /**
-   * Call API
+   * Executes a method call with the given parameters.
    *
-   * @param version
-   * @param request
-   * @param shipper
-   * @return ArrayList<mixed, mixed>
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
+   * @param version The API version to use for the method call.
+   * @param shipper The shipper to use for the method call.
+   * @param request The request to be executed.
+   * @return A hashmap containing the result of the method call.
+   * @throws UnauthorizedException If the method call is unauthorized.
+   * @throws BadRequestException   If the request is invalid.
    */
   public HashMap<Object, Object> call(
       API version,
@@ -117,14 +105,15 @@ public class Requester implements RequesterInterface {
   }
 
   /**
-   * Call API
+   * Calls the specified API with the given parameters and returns a HashMap.
    *
-   * @param version
-   * @param request
-   * @param shipper
-   * @param data
-   * @return ArrayList<mixed, mixed>
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
+   * @param version The API version to use.
+   * @param shipper The shipper object to use.
+   * @param request The request to execute.
+   * @param data    The data to send with the request.
+   * @return A HashMap containing the response from the API.
+   * @throws UnauthorizedException If the API call is unauthorized.
+   * @throws BadRequestException   If the API call has a bad request.
    */
   public HashMap<Object, Object> call(
       API version,
@@ -136,16 +125,17 @@ public class Requester implements RequesterInterface {
   }
 
   /**
-   * Call API
+   * Performs a method call to the API server and retrieves the response.
    *
-   * @param version
-   * @param request
-   * @param shipper
-   * @param data
-   * @param shouldHaveStatus
-   * @param gzip
-   * @return ArrayList<mixed, mixed>
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
+   * @param version          The API version to use.
+   * @param shipper          The shipper object.
+   * @param request          The request for the API server.
+   * @param data             The data to be sent in the request.
+   * @param shouldHaveStatus Whether the response should have a status or not.
+   * @param gzip             Whether to compress the response using gzip or not.
+   * @return A HashMap containing the parsed response data from the API server.
+   * @throws UnauthorizedException if the request is unauthorized.
+   * @throws BadRequestException   if the request is invalid.
    */
   public HashMap<Object, Object> call(
       API version,
@@ -156,13 +146,11 @@ public class Requester implements RequesterInterface {
       Boolean gzip
   ) throws UnauthorizedException, BadRequestException {
     int statusCode = 0;
-    String content = null;
+    String content;
     HashMap<Object, Object> contentHashMap = new HashMap<>();
     try {
       // resolve url
       String path = ((shipper != null ? shipper.label : "") + "/" + request).trim();
-      // String path = (shipper.label + "/" + request.label + "/").trim();
-      // String path = (shipper.toString() + "/" + request.toString()).trim();
       path = path.replace("//", "/");
       URL host = this.resolveHostName(version.toString());
 
@@ -176,12 +164,11 @@ public class Requester implements RequesterInterface {
 
       // get status code and content
       statusCode = response.getStatusLine().getStatusCode();
-      // content = this.getContents(response.getEntity().getContent()., gzip);
       content = EntityUtils.toString(response.getEntity());
       log.info(String.format("Returned response from Balikobot: %s", content));
 
       // parse response content to assoc ArrayList<>
-      contentHashMap = this.parseContents(content, statusCode < 300);
+      contentHashMap = parseContents(content, statusCode < 300);
     } catch (Exception e) {
       log.error(String.format("Exception: %s", e.getMessage()), e);
     }
@@ -194,31 +181,16 @@ public class Requester implements RequesterInterface {
   }
 
   /**
-   * Get API response
+   * Sends an HTTP request to the specified URL with the given path and data.
    *
-   * @param url
-   * @param data
-   * @return \Psr\Http\Message\ResponseInterface
+   * @param url  the URL to send the request to
+   * @param path the path to append to the URL
+   * @param data the data to include in the request body (null for GET requests)
+   * @return the HTTP response from the server
    */
   public org.apache.http.HttpResponse request(URL url, String path, HashMap<Object, Object> data) {
-    HttpResponse response = null;
-    int statusCode = 0;
+    int statusCode;
     try {
-      // HttpClient client = new DefaultHttpClient();
-      // SSLContext sslContext = SSLContext.getInstance("TLS");
-      //
-      // TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-      // KeyStore ks = KeyStore.getInstance("JKS");
-      // File trustFile = new File("clientTrustStore.jks");
-      // ks.load(new FileInputStream(trustFile), null);
-      // tmf.init(ks);
-      // sslContext.init(null, tmf.getTrustManagers(), null);
-      // SSLSocketFactory sf = new SSLSocketFactory(sslContext);
-      // sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-      // Scheme scheme = new Scheme("https", sf, 443);
-      // client.getConnectionManager().getSchemeRegistry().register(scheme);
-      //
-
       CredentialsProvider provider = new BasicCredentialsProvider();
       UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(apiUser, apiKey);
       provider.setCredentials(AuthScope.ANY, credentials);
@@ -230,8 +202,7 @@ public class Requester implements RequesterInterface {
           builder.build());
       CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultCredentialsProvider(provider).build();
 
-      // HttpClient httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
-      if (data != null && data.size() > 0) { // POST
+      if (data != null && !data.isEmpty()) { // POST
         final String urlStr = String.format("%s://%s%s", url.getProtocol(), url.getHost(), url.getPath() + path);
         log.info(String.format("Sending POST request to %s", urlStr));
         final HttpPost request = new HttpPost(urlStr);
@@ -252,7 +223,6 @@ public class Requester implements RequesterInterface {
         log.info(String.format("Status code %d", statusCode));
         return httpResponse;
       } else {
-        // final String urlStr = String.format("%s://%s:%d%s", url.getProtocol(), url.getHost(), url.getPort() > 0 ? url.getPort() : url.getProtocol().toLowerCase().equals("http") ? 80 : 443, url.getPath() + path);
         final String urlStr = String.format("%s://%s%s", url.getProtocol(), url.getHost(), url.getPath() + path);
         log.info(String.format("Sending GET request to %s", urlStr));
         final org.apache.http.HttpResponse httpResponse = httpClient.execute(new HttpGet(urlStr));
@@ -261,97 +231,51 @@ public class Requester implements RequesterInterface {
         return httpResponse;
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(String.format("Exception: %s", e.getMessage()), e);
     }
 
     return null;
-    // // init curl
-    // ch = curl_init();
-    //
-    // // set headers
-    // curl_setopt(ch, CURLOPT_URL, url);
-    // curl_setopt(ch, CURLOPT_RETURNTRANSFER, true);
-    // curl_setopt(ch, CURLOPT_HEADER, false);
-    //
-    // // disable SSL verification
-    // if (this.sslVerify == false) {
-    //   curl_setopt(ch, CURLOPT_SSL_VERIFYHOST, false);
-    //   curl_setopt(ch, CURLOPT_SSL_VERIFYPEER, false);
-    // }
-    //
-    // // set data
-    // if (count(data) > 0) {
-    //   curl_setopt(ch, CURLOPT_POST, true);
-    //   curl_setopt(ch, CURLOPT_POSTFIELDS, json_encode(data));
-    // }
-    //
-    // // set auth
-    // curl_setopt(ch, CURLOPT_HTTPHEADER,[
-    //     "Authorization: Basic ".base64_encode(this.apiUser.":". this.apiKey),
-    // "Content-Type: application/json",
-    //     ]);
-    //
-    // // execute curl
-    // response = curl_exec(ch);
-    // statusCode = curl_getinfo(ch, CURLINFO_HTTP_CODE);
-    //
-    // // check for errors.
-    // if (response == false) {
-    //   throw new RuntimeException(curl_error(ch), curl_errno(ch));
-    // }
-    //
-    // // close curl
-    // curl_close(ch);
-    //
-    // return new Response((int) statusCode,[],(String) response);
   }
 
   /**
-   * Decode API response JSON to ArrayList<>
+   * Parses the given content string and returns the decoded result as a HashMap.
+   * If an error occurs during decoding, it can be logged depending on the value of the throwOnError parameter.
    *
-   * @param content
-   * @return ArrayList<mixed, mixed>
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
+   * @param content      the content string to be parsed and decoded
+   * @param throwOnError a boolean indicating whether to throw an error if decoding fails
+   * @return a HashMap representing the decoded content, or null if an error occurred and throwOnError is false
    */
   public static HashMap<Object, Object> parseContents(String content, Boolean throwOnError) {
     try {
       return decode(content);
     } catch (JsonException exception) {
       log.error(String.format("Exception: %s", exception), exception);
-      // if (throwOnError) {
-      //   throw new BadRequestException([],400, exception, "Cannot parse response data");
-      // }
-      //
-      // return [];
     }
     return null;
   }
 
   /**
-   * Decode API response JSON to ArrayList<>
+   * Decodes the given content into a HashMap of objects and returns it.
    *
-   * @param content
-   * @return ArrayList<mixed, mixed>
-   * @throws \JsonException
+   * @param content the content to be decoded
+   * @return a HashMap containing the decoded content
    */
   protected static HashMap<Object, Object> decode(String content) {
     try {
       TypeReference<HashMap<Object, Object>> typeRef = new TypeReference<HashMap<Object, Object>>() {
       };
-      HashMap<Object, Object> mapping = new ObjectMapper().readValue(content, typeRef);
-      return mapping;
+      return new ObjectMapper().readValue(content, typeRef);
     } catch (IOException e) {
       log.error(String.format("Exception: %s", e.getMessage()), e);
     }
     return null;
-    // return json_decode(content, true, flags:JSON_THROW_ON_ERROR);
   }
 
   /**
-   * Get API url for given version
+   * Resolves the host name based on the given version.
    *
-   * @param version
-   * @return String
+   * @param version the version of the API
+   * @return the URL for the resolved host name based on the given version
    */
   private URL resolveHostName(String version) {
     final API apiEnum = API.valueOf(version);
@@ -360,35 +284,13 @@ public class Requester implements RequesterInterface {
   }
 
   /**
-   * Get response content (even gzipped)
+   * Validates the HTTP response based on the provided status code and response body.
    *
-   * @param stream
-   * @param gzip
-   * @return String
-   */
-  // private String getContents(StreamInterface stream, Boolean gzip) {
-  //   if (!gzip) {
-  //     return stream.getContents();
-  //   }
-  //
-  //   try {
-  //     inflateStream = new InflateStream(stream);
-  //
-  //     return inflateStream.getContents();
-  //   } catch (Throwable) {
-  //     stream.rewind();
-  //
-  //     return stream.getContents();
-  //   }
-  // }
-
-  /**
-   * Validate response
-   *
-   * @param statusCode
-   * @param response
-   * @param shouldHaveStatus
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
+   * @param statusCode       The HTTP status code of the response.
+   * @param response         The response body as a HashMap.
+   * @param shouldHaveStatus Determines whether the response should have a status code (true) or not (false).
+   * @throws UnauthorizedException If the request is unauthorized.
+   * @throws BadRequestException   If the request is invalid or malformed.
    */
   @SneakyThrows
   private void validateResponse(int statusCode, HashMap<Object, Object> response, Boolean shouldHaveStatus) throws UnauthorizedException, cz.balikobot.api.exceptions.BadRequestException {
@@ -397,8 +299,15 @@ public class Requester implements RequesterInterface {
     this.validator.validateResponseStatus(response, null, shouldHaveStatus);
   }
 
+  /**
+   * Converts a JSONObject to a Map.
+   *
+   * @param json the JSONObject to convert to a Map
+   * @return a Map representation of the given JSONObject
+   * @throws JSONException if an error occurs while converting the JSONObject
+   */
   public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
-    Map<String, Object> retMap = new HashMap<String, Object>();
+    Map<String, Object> retMap = new HashMap<>();
 
     if (json != JSONObject.NULL) {
       retMap = toMap(json);
@@ -406,8 +315,15 @@ public class Requester implements RequesterInterface {
     return retMap;
   }
 
+  /**
+   * Converts a JSONObject to a Map<String, Object>.
+   *
+   * @param object The JSONObject to convert.
+   * @return A Map<String, Object> representing the converted JSONObject.
+   * @throws JSONException if there is an error parsing the JSONObject.
+   */
   public static Map<String, Object> toMap(JSONObject object) throws JSONException {
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<>();
 
     Iterator<String> keysItr = object.keys();
     while (keysItr.hasNext()) {
@@ -424,8 +340,15 @@ public class Requester implements RequesterInterface {
     return map;
   }
 
+  /**
+   * Converts a JSONArray to a List of objects.
+   *
+   * @param array the JSONArray to be converted
+   * @return the converted List of objects
+   * @throws JSONException if there is an error in the JSON structure
+   */
   public static List<Object> toList(JSONArray array) throws JSONException {
-    List<Object> list = new ArrayList<Object>();
+    List<Object> list = new ArrayList<>();
     for (int i = 0; i < array.length(); i++) {
       Object value = array.get(i);
       if (value instanceof JSONArray) {

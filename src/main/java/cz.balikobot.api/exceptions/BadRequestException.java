@@ -2,7 +2,13 @@ package cz.balikobot.api.exceptions;
 
 import java.util.HashMap;
 
+/**
+ * Bad Request Exception.
+ */
 public class BadRequestException extends Exception {
+  /**
+   *
+   */
   public BadRequestException(String message) {
     super(message);
   }

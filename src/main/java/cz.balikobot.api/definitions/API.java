@@ -1,9 +1,15 @@
 package cz.balikobot.api.definitions;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+/**
+ * API versions.
+ */
+@Slf4j
 public enum API {
   /**
    * APIv1 version 1
@@ -46,7 +52,7 @@ public enum API {
   }
 
   /**
-   * API URL
+   * API URL.
    */
   public static final HashMap<API, URL> URL = new HashMap<API, URL>() {{
     try {
@@ -56,7 +62,7 @@ public enum API {
       put(V2V1, new URL("https://apiv2.balikobot.cz/"));
       put(V2V2, new URL("https://apiv2.balikobot.cz/v2/"));
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      log.error(String.format("Exception: %s", e.getMessage()), e);
     }
   }};
 

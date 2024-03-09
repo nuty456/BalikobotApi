@@ -5,93 +5,35 @@ import java.util.HashMap;
 
 import lombok.Data;
 
+/**
+ * This class provides various methods for formatting response data.
+ */
 @Data
 public class Formatter {
   /**
-   * Response validator
-   *
-   * @var \Inspirum\Balikobot\Services\Validator
+   * The Validator class provides methods for validating status codes and response data.
    */
   private Validator validator;
 
   /**
-   * @param \Inspirum\Balikobot\Services\Validator validator
+   * The Formatter class provides methods for formatting data.
    */
   public Formatter(Validator validator) {
     this.validator = validator;
   }
 
   /**
-   * Normalize "zipcodes" request response
+   * Normalize the response of tracked packages.
    *
-   * @param HashMap<Object, Object> response
-   * @param |null        country
-   *
-   * @return ArrayList<ArrayList < String, mixed>>
-   */
-  // public ArrayList<> normalizePostCodesResponse(ArrayList<> response, String country = null)
-  // {
-  //   country = response.get("country") ?? country;
-  //
-  //   formattedResponse = new ArrayList();
-  //
-  //   for (response.get("zip_codes") ?? [] : responseItem) {
-  //   formattedResponse[] = [
-  //   "postcode"     => responseItem.get("zip") ?? (responseItem.get("zip_start") ?? null),
-  //   "postcode_end" => responseItem.get("zip_end") ?? null,
-  //       "city"         => responseItem.get("city") ?? null,
-  //       "country"      => responseItem.get("country") ?? country,
-  //       "1B"           => (Boolean) (responseItem.get("1B") ?? false),
-  //           ];
-  // }
-  //
-  //   return formattedResponse;
-  // }
-
-  /**
-   * Normalize "trackstatus" request response
-   *
-   * @param HashMap<Object, Object> response
-   *
-   * @return ArrayList<ArrayList < String, Double | String | null>>
-   *
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
-   */
-  // public HashMap<Object, Object> normalizeTrackPackagesLastStatusResponse(HashMap<Object, Object> response)
-  // {
-  //   formattedResponse = new ArrayList();
-  //
-  //   for (response : responseItem) {
-  //   this.validator.validateResponseStatus(responseItem, response);
-  //
-  //   formattedResponse[] = [
-  //   "name"          => responseItem.get("status_text"),
-  //       "name_internal" => responseItem.get("status_text"),
-  //       "type"          => "event",
-  //       "status_id"     => (Double) responseItem.get("status_id"),
-  //       "date"          => null,
-  //           ];
-  // }
-  //
-  //   return formattedResponse;
-  // }
-
-  /**
-   * Normalize "track" request response
-   *
-   * @param response
-   * @return ArrayList<ArrayList < ArrayList < String, Double | String>>>
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
+   * @param response The response to be normalized.
+   * @return The normalized response as an ArrayList of HashMaps.
    */
   public ArrayList<HashMap<Object, Object>> normalizeTrackPackagesResponse(ArrayList<HashMap<Object, Object>> response) {
     ArrayList<HashMap<Object, Object>> formattedResponse = new ArrayList();
 
     for (HashMap<Object, Object> responseItems : response) {
-      // this.validator.validateResponseStatus(responseItems, response);
 
-      // formattedResponse[i] = new ArrayList();
-
-      ArrayList<HashMap<Object, Object>> resultS = new ArrayList<>();
+      ArrayList<HashMap<Object, Object>> resultS;
       if (responseItems.get("states") != null) {
         final Object resStates = responseItems.get("states");
         resultS = resStates != null ? (ArrayList<HashMap<Object, Object>>) resStates : new ArrayList<>();
@@ -100,12 +42,6 @@ public class Formatter {
       }
 
       for (HashMap<Object, Object> responseItem : resultS) {
-
-        // fix wrong API response https://github.com/inspirum/balikobot-php/issues/15 for PHP < 8.0
-        // if (is_array<>(responseItem) == false || ArrayList<>_key_exists("name", responseItem) == false) {
-        //   continue;
-        // }
-
         HashMap<Object, Object> item = new HashMap<>();
         item.put("date", responseItem.get("date"));
         item.put("name", responseItem.get("name"));
@@ -124,7 +60,7 @@ public class Formatter {
             item.put("status_id", new Double((Integer) statusId));
           }
         }
-        item.put("type", responseItem.containsKey("type") ? responseItem.get("type") : "event");
+        item.put("type", responseItem.getOrDefault("type", "event"));
         item.put("name_internal", responseItem.containsKey("name_balikobot") ? responseItem.get("name_balikobot") : responseItem.get("name"));
         formattedResponse.add(item);
       }
@@ -134,32 +70,10 @@ public class Formatter {
   }
 
   /**
-   * Normalize "pod" request response
+   * Removes the "status" key from the provided HashMap.
    *
-   * @param HashMap<Object, Object> response
-   *
-   * @return ArrayList<String>
-   *
-   * @throws \Inspirum\Balikobot\Contracts\ExceptionInterface
-   */
-  // public HashMap<Object, Object> normalizeProofOfDeliveriesResponse(HashMap<Object, Object> response)
-  // {
-  //   formattedResponse = new ArrayList();
-  //
-  //   for (response : responseItem) {
-  //   this.validator.validateResponseStatus(responseItem, response);
-  //
-  //   formattedResponse[] = responseItem.get("file_url");
-  // }
-  //
-  //   return formattedResponse;
-  // }
-
-  /**
-   * Unset "status" attribute
-   *
-   * @param response
-   * @return HashMap<Object, Object>
+   * @param response The HashMap from which to remove the "status" key.
+   * @return The modified HashMap without the "status" key.
    */
   public HashMap<Object, Object> withoutStatus(HashMap<Object, Object> response) {
     response.remove("status");
@@ -168,12 +82,12 @@ public class Formatter {
   }
 
   /**
-   * Normalize response items
+   * Normalize the response items by creating a HashMap with key-value pairs.
    *
-   * @param items
-   * @param keyName
-   * @param valueName
-   * @return ArrayList<String, mixed>
+   * @param items     The list of items to be normalized.
+   * @param keyName   The key name used to retrieve the keys from the items.
+   * @param valueName The value name used to retrieve the values from the items. Can be null.
+   * @return The normalized response as a HashMap with key-value pairs.
    */
   public static HashMap<Object, Object> normalizeResponseItems(ArrayList<HashMap<Object, Object>> items, String keyName, String valueName) {
     final HashMap<Object, Object> formattedItems = new HashMap<>();
@@ -187,54 +101,4 @@ public class Formatter {
 
     return formattedItems;
   }
-
-  /**
-   * Normalize response items indexed by group
-   *
-   * @param ArrayList<ArrayList<mixed>> items
-   * @param               groupKeyName
-   * @param               groupItemsKeyName
-   * @param               keyName
-   * @param |null         valueName
-   *
-   * @return ArrayList<String, ArrayList < String, mixed>>
-   */
-  // public ArrayList<> normalizeResponseIndexedItems(
-  //     ArrayList<> items,
-  //     String groupKeyName,
-  //     String groupItemsKeyName,
-  //     String keyName,
-  //     String valueName
-  // )  {
-  //   formattedItems = new ArrayList();
-  //
-  //   for (items : item) {
-  //     formattedItems[(String) item[groupKeyName]] = this.normalizeResponseItems(
-  //         item[groupItemsKeyName] ?? [],
-  //     keyName,
-  //         valueName
-  //           );
-  //   }
-  //
-  //   return formattedItems;
-  // }
-
-  /**
-   * Encapsulate ids with key
-   *
-   * @param ArrayList<int|String> ids
-   * @param             keyName
-   *
-   * @return ArrayList<ArrayList < int | String>>
-   */
-  // public ArrayList<> encapsulateIds(ArrayList<> ids, String keyName)
-  // {
-  //   formattedItems = new ArrayList();
-  //
-  //   for (ids : id) {
-  //   formattedItems[] = [keyName => id];
-  // }
-  //
-  //   return formattedItems;
-  // }
 }

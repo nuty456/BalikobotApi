@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import lombok.Data;
 
+/**
+ * Defined responses.
+ */
 @Data
 public class Response {
   /**

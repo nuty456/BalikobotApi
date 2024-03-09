@@ -1,16 +1,26 @@
 package cz.balikobot.api.model.values;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * Represents the status of a dropped package.
+ */
 @Data
+@AllArgsConstructor
 public class PackageDropStatus {
+  /**
+   * Represents the ID of a package.
+   */
   private String packageId;
-  private Integer pStatus;
-  private String statusMessage;
 
-  public PackageDropStatus(String packageId, Integer pStatus, String statusMessage) {
-    this.packageId = packageId;
-    this.pStatus = pStatus;
-    this.statusMessage = statusMessage;
-  }
+  /**
+   * Represents the status of a dropped package.
+   */
+  private Integer pStatus;
+
+  /**
+   * Represents the status message of a dropped package.
+   */
+  private String statusMessage;
 }

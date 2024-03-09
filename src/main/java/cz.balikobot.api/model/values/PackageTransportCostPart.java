@@ -1,8 +1,13 @@
 package cz.balikobot.api.model.values;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * PackageTransportCostPart represents a part of the transport cost for a package.
+ */
 @Data
+@AllArgsConstructor
 public class PackageTransportCostPart {
   /**
    * Part name
@@ -18,17 +23,4 @@ public class PackageTransportCostPart {
    * Currency code
    */
   private String currencyCode;
-
-  /**
-   * PackageTransportCost constructor
-   *
-   * @param name
-   * @param cost
-   * @param currencyCode
-   */
-  public PackageTransportCostPart(String name, Double cost, String currencyCode) {
-    this.name = name;
-    this.cost = cost;
-    this.currencyCode = currencyCode;
-  }
 }

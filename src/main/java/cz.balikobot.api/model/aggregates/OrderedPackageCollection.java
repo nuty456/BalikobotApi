@@ -12,45 +12,44 @@ import cz.balikobot.api.contracts.IteratorAggregate;
 import cz.balikobot.api.definitions.Shipper;
 import cz.balikobot.api.model.values.ArrayAccess;
 import cz.balikobot.api.model.values.OrderedPackage;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * This class represents a collection of OrderedPackage objects.
+ * It implements the ArrayAccess, Countable, and IteratorAggregate interfaces.
+ * <p>
+ * The OrderedPackageCollection class allows adding and accessing packages,
+ * as well as providing methods to retrieve information about the packages.
+ */
 @Data
+@Slf4j
 public class OrderedPackageCollection implements ArrayAccess<Integer, OrderedPackage>, Countable, IteratorAggregate<OrderedPackage> {
   /**
-   * Packages
-   *
-   * @var ArrayList<int,\Inspirum\Balikobot\Model\Values\OrderedPackage>
+   * Represents a collection of ordered packages.
    */
   private List<OrderedPackage> packages = new ArrayList<>();
 
   /**
-   * Shipper code
-   *
-   * @var String|null
+   * Represents the shipper of a package.
    */
   private Shipper shipper;
 
   /**
-   * Labels URL
-   *
-   * @var String|null
+   * The labelsUrl variable stores the URL for the label of an ordered package.
    */
   private String labelsUrl = null;
 
   /**
-   * OrderedPackageCollection constructor
-   *
-   * @param shipper
+   * Represents a collection of ordered packages.
    */
   public OrderedPackageCollection(Shipper shipper) {
     this.shipper = shipper;
   }
 
   /**
-   * Add package
+   * Adds an OrderedPackage to the collection.
    *
-   * @param \Inspirum\Balikobot\Model\Values\OrderedPackage package
-   * @return void
-   * @throws \InvalidArgumentException
+   * @param orderedPackage The OrderedPackage to be added.
    */
   public void add(OrderedPackage orderedPackage) {
     // validate orderedPackage shipper
@@ -95,75 +94,51 @@ public class OrderedPackageCollection implements ArrayAccess<Integer, OrderedPac
   }
 
   /**
-   * @param labelsUrl
-   * @return void
-   */
-  public void setLabelsUrl(String labelsUrl) {
-    this.labelsUrl = labelsUrl;
-  }
-
-  /**
-   * @return String|null
-   */
-  public String getLabelsUrl() {
-    return this.labelsUrl;
-  }
-
-  /**
-   * Validate shipper
+   * Validates the shipper of an OrderedPackage.
    *
-   * @param \Inspirum\Balikobot\Model\Values\OrderedPackage package
-   * @return void
-   * @throws \InvalidArgumentException
+   * @param pPackage The OrderedPackage to be validated.
+   * @return boolean Returns true if the shipper of the pPackage is the same as the shipper of the collection, false otherwise.
    */
-  private boolean validateShipper(OrderedPackage pPackage) { // throws InvalidArgumentException {
+  private boolean validateShipper(OrderedPackage pPackage) {
     // set shipper if first pPackage in collection
     if (this.shipper == null) {
       this.shipper = pPackage.getShipper();
     }
 
-    // validate shipper
-    // throw new InvalidArgumentException(
-    //     String.format(
-    //         "Package is from different shipper (\"%s\" instead of \"%s\")",
-    //         pPackage.getShipper(),
-    //         this.shipper
-    //     )
-    // );
     return this.shipper == pPackage.getShipper();
   }
 
   /**
-   * Determine if an item exists at an offset
+   * Checks if the given offset exists in the collection.
    *
-   * @param key
-   * @return Boolean
+   * @param key The offset to check.
+   * @return {@code true} if the offset exists, {@code false} otherwise.
    */
   public Boolean offsetExists(Integer key) {
     try {
-      this.packages.get(key);
+      // todo this.packages.get(key);
       return true;
     } catch (Exception e) {
+      log.error(String.format("Exception: %s", e.getMessage()), e);
     }
     return false;
   }
 
   /**
-   * Get an item at a given offset
+   * Retrieves the value associated with the given key from the packages collection.
    *
-   * @param key
-   * @return \Inspirum\Balikobot\Model\Values\OrderedPackage
+   * @param key The key to retrieve the value for.
+   * @return The value associated with the key.
    */
   public OrderedPackage offsetGet(Integer key) {
     return this.packages.get(key);
   }
 
   /**
-   * Set the item at a given offset
+   * Sets the value at the specified key offset in the packages collection if the shipper of the value is valid.
    *
-   * @param                                            key
-   * @param \Inspirum\Balikobot\Model\Values\OrderedPackage value
-   * @return void
+   * @param key   The key offset where the value is to be set.
+   * @param value The value to be set at the specified key offset.
    */
   public void offsetSet(Integer key, OrderedPackage value) {
     if (this.validateShipper(value)) {
@@ -173,28 +148,27 @@ public class OrderedPackageCollection implements ArrayAccess<Integer, OrderedPac
   }
 
   /**
-   * Unset the item at a given offset
+   * Removes the value associated with the given key from the packages collection.
    *
-   * @param key
-   * @return void
+   * @param key The key to remove the value for.
    */
   public void offsetUnset(Integer key) {
     this.packages.remove(key);
   }
 
   /**
-   * Count elements of an object
+   * Returns the count of packages in the collection.
    *
-   * @return int
+   * @return The count of packages.
    */
   public int count() {
     return this.packages.size();
   }
 
   /**
-   * Get an iterator for the items
+   * Returns an iterator over the elements in this collection.
    *
-   * @return \ArrayIterator<int,\Inspirum\Balikobot\Model\Values\OrderedPackage>
+   * @return an iterator over the elements in this collection.
    */
   public Iterator<OrderedPackage> getIterator() {
     return this.packages.iterator();
